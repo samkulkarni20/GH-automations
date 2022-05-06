@@ -37,7 +37,7 @@ jobs:
           PAT: ${{ secrets.WORKFLOW_TOKEN }}
         run: |
           export YESTERDAY=$(date --date='1 day ago' +%F)
-          curl \
+          curl -s \
             -u samkulkarni20:$PAT \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/rancherlabs/rancher-security/issues\?state\=open\&per_page\=100 | \
