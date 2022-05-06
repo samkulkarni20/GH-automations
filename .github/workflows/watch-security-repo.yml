@@ -1,0 +1,47 @@
+# This is a basic workflow to watch issues in Rancher Security repo
+name: Watch Rancher Security Repo issues
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on cron schedule of every 5 mins
+  schedule:
+    - cron: "0/5 * * * *"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
+
+      - name: Watch issues in Rancher Security Repo
+        env:
+          PAT: ${{ secrets.WORKFLOW_TOKEN }}
+        run: |
+          curl \
+            -u samkulkarni20:$PAT \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/rancherlabs/rancher-security/issues\?state\=open\&per_page\=100 | \
+            jq '[{url: .[].url, created_at: .[].created_at}]' |\
+            jq 'map(select(.created_at | split("T")[0] | split("-") | .[0] == "2021" and .[1] == "10" and .[2] == "14"))'
+      - uses: ajilraju/actions-date@v0.1
+        with:
+          args: date --date='2 days ago'
