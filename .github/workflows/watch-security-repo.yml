@@ -36,12 +36,12 @@ jobs:
         env:
           PAT: ${{ secrets.WORKFLOW_TOKEN }}
         run: |
+          YESTERDAY = $(date --date='1 day ago' +%F)
           curl \
             -u samkulkarni20:$PAT \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/rancherlabs/rancher-security/issues\?state\=open\&per_page\=100 | \
             jq '[{url: .[].url, created_at: .[].created_at}]' |\
-            jq 'map(select(.created_at | split("T")[0] | split("-") | .[0] == "2021" and .[1] == "10" and .[2] == "14"))'
-      - uses: ajilraju/actions-date@v0.1
-        with:
-          args: date --date='2 days ago'
+            jq 'map(select(.created_at | split("T") | .[0] == $YESTERDAY ))' |\
+            jq '.[].url' |\
+            wc -l
