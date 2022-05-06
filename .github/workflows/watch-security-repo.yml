@@ -42,6 +42,6 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/rancherlabs/rancher-security/issues\?state\=open\&per_page\=100 | \
             jq '[{url: .[].url, created_at: .[].created_at}]' |\
-            jq 'map(select(.created_at | split("T") | .[0] == $YESTERDAY ))' |\
+            jq 'map(select(.created_at | split("T") | .[0] == "$YESTERDAY"))' |\
             jq '.[].url' |\
             wc -l
