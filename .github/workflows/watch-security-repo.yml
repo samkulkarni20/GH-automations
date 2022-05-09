@@ -3,9 +3,9 @@ name: Watch Rancher Security Repo issues
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on cron schedule of every 5 mins
+  # Triggers the workflow on cron schedule of every every day at 10 am IST
   schedule:
-    - cron: "0/5 * * * *"
+    - cron: "30 4 * * *"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
